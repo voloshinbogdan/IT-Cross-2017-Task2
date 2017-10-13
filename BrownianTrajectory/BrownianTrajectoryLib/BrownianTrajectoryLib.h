@@ -10,7 +10,7 @@ public:
 	double y;
 
 	point(double x, double y);
-}
+};
 
 point next_step(const point &from_p, double v, double delta_t, double angle);
 
