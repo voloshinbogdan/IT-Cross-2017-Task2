@@ -1,7 +1,12 @@
 #include "main-window.h"
 
-#include <QtWidgets>
-
+#include <QPainter>
+#include <QPixmap>
+#include <QResizeEvent>
+#include <QPen>
+#include <QRect>
+#include <QFont>
+#include <QWidget>
 
 
 MainWindow::MainWindow(QWidget *pParent)
@@ -23,6 +28,7 @@ void MainWindow::resizeEvent(QResizeEvent *pEvent)
 			"Upper-Left Corner");
 	painter.drawText(10, 10, cstrL);
 
+	painter.drawLine(10, 10, 100, 100);
 	QFont font("Arial", 24);
 	font.setUnderline(true);
 
