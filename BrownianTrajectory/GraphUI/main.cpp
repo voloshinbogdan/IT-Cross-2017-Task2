@@ -1,10 +1,13 @@
+#include "main-window.h"
+
 #include <QApplication>
-#include <QLabel>
+
+
 
 int main(int nArgC, char *apszArgV[]) {
 	QApplication app(nArgC, apszArgV);
-	QLabel *pLabel = new QLabel("Hello Qt!");
-	pLabel->show();
+	MainWindow *pWindow = new MainWindow;
+	pWindow->show();
 
 	return app.exec();
 }
