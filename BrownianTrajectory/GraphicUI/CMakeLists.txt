@@ -6,5 +6,22 @@ find_package(Qt5Widgets)
 
 add_executable(GraphicUI main.cpp main-window.cpp main-window.h)
 
+find_path(
+	BROWNIANTRAJECTORY_H_DIR BrownianTrajectoryLib.h
+	PATHS ../BrownianTrajectoryLib)
+if(NOT BROWNIANTRAJECTORY_H_DIR)
+	message(
+		SEND_ERROR
+		"Could not find BrownianTrajectoryLib.h")
+endif()
+set_property(
+	TARGET BrownianTrajectoryLib
+	PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+	${BROWNIANTRAJECTORY_H_DIR})
+set_property(
+	TARGET BrownianTrajectoryLib
+	PROPERTY IMPORTED_LOCATION
+	${BROWNIANTRAJECTORY_LIB})
+
 target_link_libraries(GraphicUI Qt5::Widgets)
 target_link_libraries(GraphicUI BrownianTrajectoryLib)
