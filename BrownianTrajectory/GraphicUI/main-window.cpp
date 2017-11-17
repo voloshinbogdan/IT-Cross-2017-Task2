@@ -9,6 +9,7 @@
 #include <QWidget>
 
 
+
 MainWindow::MainWindow(QWidget *pParent)
 	: QWidget(pParent)
 {
@@ -51,6 +52,29 @@ void MainWindow::paintEvent(QPaintEvent *pEvent)
 {
 	QPainter painter(this);
 	painter.drawPixmap(0, 0, m_Pixmap);
+}
+
+
+
+void MainWindow::rescalePoints(std::vector<points> &points, const QSize& size)
+{
+	// Process start point
+	int xCenter = size.width() / 2;
+	int yCenter = size.height() / 2;
+
+	int dx = xCenter - points[0].x;
+	int dy = yCenter - points[0].y;
+
+	for(int i = 0; i < points.size(); ++i) {
+		points[i].x += dx;
+		points[i].y += dy;
+	}
+
+	// Process scale
+	double max_x = 0;
+	double max_y = 0;
+
+
 }
 
 
