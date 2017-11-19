@@ -5,7 +5,7 @@
 #include <QSize>
 #include <vector>
 
-#include <BrownianTrajectory.h>
+#include <BrownianTrajectoryLib.h>
 
 class MainWindow : public QWidget
 {
@@ -19,7 +19,7 @@ protected:
 	void paintEvent(QPaintEvent *pEvent);
 
 private:
-	void rescalePoints(std::vector<point> &points, const QSize& size);
+	std::vector<point> rescalePoints(std::vector<point> &points, const QSize& size);
 
 	QPixmap m_Pixmap;
 	double delta_time = 2;

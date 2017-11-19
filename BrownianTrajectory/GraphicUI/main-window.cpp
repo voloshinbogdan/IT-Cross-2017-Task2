@@ -1,5 +1,7 @@
 #include "main-window.h"
 
+#include <cassert>
+
 #include <QPainter>
 #include <QPixmap>
 #include <QResizeEvent>
@@ -13,6 +15,8 @@
 MainWindow::MainWindow(QWidget *pParent)
 	: QWidget(pParent)
 {
+	
+	path = generate_path(delta_time, step_count, v_max);
 	setAttribute(Qt::WA_NoSystemBackground, true);
 }
 
@@ -25,6 +29,14 @@ void MainWindow::resizeEvent(QResizeEvent *pEvent)
 
 	QPainter painter(&m_Pixmap);
 
+	std::vector<point> points = rescalePoints(path, pEvent->size());
+
+	for(int i = 1; i < path.size(); ++i) {
+		painter.drawLine(
+			points[i - 1].x, points[i - 1].y,
+			points[i].x, points[i].y);
+	}
+	/*
 	const QString cstrL = QString::fromLocal8Bit(
 			"Upper-Left Corner");
 	painter.drawText(10, 10, cstrL);
@@ -44,6 +56,7 @@ void MainWindow::resizeEvent(QResizeEvent *pEvent)
 	pen.setWidth(5);
 	painter.setPen(pen);
 	painter.drawRect(rectText);
+	*/
 }
 
 
@@ -56,25 +69,50 @@ void MainWindow::paintEvent(QPaintEvent *pEvent)
 
 
 
-void MainWindow::rescalePoints(std::vector<points> &points, const QSize& size)
+std::vector<point> MainWindow::rescalePoints(std::vector<point> &points, const QSize& size)
 {
 	// Process start point
-	int xCenter = size.width() / 2;
-	int yCenter = size.height() / 2;
+	std::vector<point> newPoints;
 
-	int dx = xCenter - points[0].x;
-	int dy = yCenter - points[0].y;
+	double xCenter = size.width() / 2;
+	double yCenter = size.height() / 2;
 
 	for(int i = 0; i < points.size(); ++i) {
-		points[i].x += dx;
-		points[i].y += dy;
+		newPoints.push_back(point(
+			points[i].x - points[0].x,
+			points[i].y - points[0].y));
 	}
 
 	// Process scale
-	double max_x = 0;
-	double max_y = 0;
+	double maxX = 0;
+	double maxY = 0;
+
+	for(int i = 0; i < newPoints.size(); ++i) {
+		point centeredDistance(abs(newPoints[i].x), abs(newPoints[i].y));
+		if (centeredDistance.x > maxX) {
+			maxX = centeredDistance.x;
+		}
+		if (centeredDistance.y > maxY) {
+			maxY = centeredDistance.y;
+		}
+	}
+
+	double scale = std::min(0.9 * xCenter / maxX, 0.9 * yCenter / maxY);
+	for(int i = 0; i < newPoints.size(); ++i) {
+		newPoints[i].x *= scale;
+		newPoints[i].y *= scale;
+	}
+
+	double dx = xCenter - points[0].x;
+	double dy = yCenter - points[0].y;
 
 
+	for(int i = 0; i < points.size(); ++i) {
+		newPoints[i].x += xCenter;
+		newPoints[i].y += yCenter;
+	}
+
+	return newPoints;
 }
 
 
