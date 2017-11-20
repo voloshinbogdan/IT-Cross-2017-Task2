@@ -4,21 +4,42 @@
 #include <QWidget>
 #include <QSize>
 #include <vector>
+#include <QMainWindow>
 
 #include <BrownianTrajectoryLib.h>
 
-class MainWindow : public QWidget
+
+class QAction;
+class QMenu;
+
+
+class MainWindow : public QMainWindow
 {
+
 public:
 
 	MainWindow(QWidget *pParent = 0);
 
 protected:
-
 	void resizeEvent(QResizeEvent *pEvent);
 	void paintEvent(QPaintEvent *pEvent);
 
+private slots:
+	void appExit();
+	void openDataPane();
+	void openAbout();
+
 private:
+	void createActions();
+	void createMenus();
+
+	QMenu *fileMenu;
+	QMenu *editMenu;
+	QMenu *helpMenu;
+	QAction *exitAct;
+	QAction *dataPaneAct;
+	QAction *aboutAct;
+
 	std::vector<point> rescalePoints(std::vector<point> &points, const QSize& size);
 
 	QPixmap m_Pixmap;

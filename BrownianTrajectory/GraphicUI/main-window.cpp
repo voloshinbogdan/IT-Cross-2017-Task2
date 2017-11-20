@@ -9,15 +9,71 @@
 #include <QRect>
 #include <QFont>
 #include <QWidget>
+#include <QAction>
+#include <QMenuBar>
+#include <QMenu>
+#include <QTranslator>
 
 
 
 MainWindow::MainWindow(QWidget *pParent)
-	: QWidget(pParent)
+	: QMainWindow(pParent)
 {
 	
 	path = generate_path(delta_time, step_count, v_max);
 	setAttribute(Qt::WA_NoSystemBackground, true);
+
+	createActions();
+	createMenus();
+}
+
+
+
+void MainWindow::createActions()
+{
+	exitAct = new QAction("&Exit", this);
+	connect(exitAct, &QAction::triggered, this, &MainWindow::appExit);
+
+	dataPaneAct = new QAction("&Data pane", this);
+	connect(dataPaneAct, &QAction::triggered, this, &MainWindow::openDataPane);
+
+	aboutAct = new QAction("&About", this);
+	connect(aboutAct, &QAction::triggered,  this, &MainWindow::openAbout);
+}
+
+
+
+void MainWindow::createMenus()
+{
+	fileMenu = menuBar()->addMenu("&File");
+	fileMenu->addAction(exitAct);
+
+	editMenu = menuBar()->addMenu("&Edit");
+	editMenu->addAction(dataPaneAct);
+
+	helpMenu = menuBar()->addMenu("&About");
+	helpMenu->addAction(aboutAct);
+}
+
+
+
+void MainWindow::appExit()
+{
+
+}
+
+
+
+void MainWindow::openDataPane()
+{
+
+}
+
+
+
+void MainWindow::openAbout()
+{
+
 }
 
 
