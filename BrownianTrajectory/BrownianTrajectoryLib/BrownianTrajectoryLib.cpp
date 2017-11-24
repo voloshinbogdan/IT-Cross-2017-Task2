@@ -27,13 +27,13 @@ point next_step(const point &from_p, double v, double delta_t, double angle) {
 }
 
 
-std::vector<point> generate_path(double delta_t, int n, double v_max) {
+std::vector<point> generate_path(double delta_t, int n, double v_max, double &angle, double &v) {
 	std::vector<point> path;
 	path.push_back(point(0, 0));
 
 	for (int i = 1; i < n + 1; i++) {
-		double angle = fRand(0, M_PI);
-		double v = fRand(0, v_max);
+		angle = fRand(0, M_PI);
+		v = fRand(0, v_max);
 		path.push_back(next_step(
 			path[i - 1],
 			v,

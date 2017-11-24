@@ -9,6 +9,7 @@
 
 #include <BrownianTrajectoryLib.h>
 #include "ui_data_pane.h"
+#include "ui_about.h"
 
 class QAction;
 class QMenu;
@@ -16,7 +17,6 @@ class QMenu;
 
 class MainWindow : public QMainWindow
 {
-Q_OBJECT
 public:
 
 	MainWindow(QWidget *pParent = 0);
@@ -24,15 +24,15 @@ public:
 protected:
 	void resizeEvent(QResizeEvent *pEvent);
 	void paintEvent(QPaintEvent *pEvent);
+	void reDraw(const QSize &size);
 
 private slots:
 	void appExit();
 	void openDataPane();
 	void openAbout();
-public slots:
-	void refreshParameters();
 private:
 
+	void refreshParameters();
 	void createActions();
 	void createMenus();
 
@@ -43,6 +43,7 @@ private:
 	QAction *dataPaneAct;
 	QAction *aboutAct;
 
+	QDialog *about;
 	QDialog *dataPane;
 	Ui_DataPane *uidp;
 	std::vector<point> rescalePoints(std::vector<point> &points, const QSize& size);
@@ -51,6 +52,8 @@ private:
 	double delta_time = 2;
 	int step_count = 10;
 	double v_max = 5;
+	double last_angle;
+	double last_v;
 	std::vector<point> path;
 }; // class MainWindow
 

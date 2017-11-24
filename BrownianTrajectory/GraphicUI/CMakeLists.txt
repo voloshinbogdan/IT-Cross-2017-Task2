@@ -4,9 +4,10 @@ project(GraphicUI)
 
 find_package(Qt5Widgets)
 
+set(CMAKE_CXX_STANDARD 11)
 SET(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-qt5_wrap_ui(UIC_WRAPPERS data_pane.ui)
+qt5_wrap_ui(UIC_WRAPPERS data_pane.ui about.ui)
 
 add_executable(
 	GraphicUI

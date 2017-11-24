@@ -20,15 +20,19 @@ MainWindow::MainWindow(QWidget *pParent)
 	: QMainWindow(pParent)
 {
 	
-	path = generate_path(delta_time, step_count, v_max);
+	path = generate_path(delta_time, step_count, v_max, last_angle, last_v);
 	setAttribute(Qt::WA_NoSystemBackground, true);
 
 	uidp = new Ui_DataPane;
 	dataPane = new QDialog;
 	uidp->setupUi(dataPane);
 	connect(
-		dataPane, SIGNAL(accepted()),
-		this, SLOT(refreshParameters()));
+		dataPane, &QDialog::accepted,
+		this, &MainWindow::refreshParameters);
+
+	Ui_About uia;
+	about = new QDialog;
+	uia.setupUi(about);
 
 	createActions();
 	createMenus();
@@ -42,6 +46,10 @@ void MainWindow::refreshParameters()
 	step_count = uidp->spinBox_stepc->value();
 	v_max = uidp->doubleSpinBox_maxv->value();
 
+	path = generate_path(delta_time, step_count, v_max, last_angle, last_v);
+	reDraw(this->size());
+
+	this->repaint();
 }
 
 
@@ -68,7 +76,7 @@ void MainWindow::createMenus()
 	editMenu = menuBar()->addMenu("&Edit");
 	editMenu->addAction(dataPaneAct);
 
-	helpMenu = menuBar()->addMenu("&About");
+	helpMenu = menuBar()->addMenu("&Help");
 	helpMenu->addAction(aboutAct);
 }
 
@@ -76,7 +84,7 @@ void MainWindow::createMenus()
 
 void MainWindow::appExit()
 {
-
+	close();
 }
 
 
@@ -93,25 +101,40 @@ void MainWindow::openDataPane()
 
 void MainWindow::openAbout()
 {
-
+	about->show();
 }
 
 
 
-void MainWindow::resizeEvent(QResizeEvent *pEvent)
+void MainWindow::reDraw(const QSize &size)
 {
-	m_Pixmap = QPixmap(pEvent->size());
+	m_Pixmap = QPixmap(size);
 	m_Pixmap.fill(Qt::white);
 
 	QPainter painter(&m_Pixmap);
 
-	std::vector<point> points = rescalePoints(path, pEvent->size());
+	std::vector<point> points = rescalePoints(path, size);
 
 	for(int i = 1; i < path.size(); ++i) {
 		painter.drawLine(
 			points[i - 1].x, points[i - 1].y,
 			points[i].x, points[i].y);
 	}
+
+	const QString start = QString::fromLocal8Bit(
+			"Start");
+	painter.drawText(points[0].x, points[0].y, start);
+
+	const QString m = QString::fromLocal8Bit(
+			"(") + QString::number(last_v, 'g', 2) + ";" + QString::number(last_angle, 'g', 2) + ")";
+	painter.drawText(points[path.size()-1].x, points[path.size()-1].y, m);
+}
+
+
+
+void MainWindow::resizeEvent(QResizeEvent *pEvent)
+{
+	reDraw(pEvent->size());
 	/*
 	const QString cstrL = QString::fromLocal8Bit(
 			"Upper-Left Corner");
@@ -151,7 +174,7 @@ std::vector<point> MainWindow::rescalePoints(std::vector<point> &points, const Q
 	std::vector<point> newPoints;
 
 	double xCenter = size.width() / 2;
-	double yCenter = size.height() / 2;
+	double yCenter = (size.height()) / 2;
 
 	for(int i = 0; i < points.size(); ++i) {
 		newPoints.push_back(point(
@@ -179,8 +202,8 @@ std::vector<point> MainWindow::rescalePoints(std::vector<point> &points, const Q
 		newPoints[i].y *= scale;
 	}
 
-	double dx = xCenter - points[0].x;
-	double dy = yCenter - points[0].y;
+	double dx = xCenter - newPoints[0].x;
+	double dy = yCenter - newPoints[0].y;
 
 
 	for(int i = 0; i < points.size(); ++i) {

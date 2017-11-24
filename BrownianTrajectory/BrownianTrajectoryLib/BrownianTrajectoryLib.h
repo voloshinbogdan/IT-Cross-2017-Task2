@@ -14,6 +14,6 @@ public:
 
 point next_step(const point &from_p, double v, double delta_t, double angle);
 
-std::vector<point> generate_path(double delta_t, int n, double v_max);
+std::vector<point> generate_path(double delta_t, int n, double v_max, double &angle, double &v);
 
 #endif //BROWNIAN_TRAJECTORY_H
