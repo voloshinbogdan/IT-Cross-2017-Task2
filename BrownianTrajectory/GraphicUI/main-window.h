@@ -5,9 +5,10 @@
 #include <QSize>
 #include <vector>
 #include <QMainWindow>
+#include <QDialog>
 
 #include <BrownianTrajectoryLib.h>
-
+#include "ui_data_pane.h"
 
 class QAction;
 class QMenu;
@@ -15,7 +16,7 @@ class QMenu;
 
 class MainWindow : public QMainWindow
 {
-
+Q_OBJECT
 public:
 
 	MainWindow(QWidget *pParent = 0);
@@ -28,8 +29,10 @@ private slots:
 	void appExit();
 	void openDataPane();
 	void openAbout();
-
+public slots:
+	void refreshParameters();
 private:
+
 	void createActions();
 	void createMenus();
 
@@ -40,6 +43,8 @@ private:
 	QAction *dataPaneAct;
 	QAction *aboutAct;
 
+	QDialog *dataPane;
+	Ui_DataPane *uidp;
 	std::vector<point> rescalePoints(std::vector<point> &points, const QSize& size);
 
 	QPixmap m_Pixmap;

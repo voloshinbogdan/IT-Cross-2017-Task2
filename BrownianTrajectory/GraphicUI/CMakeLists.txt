@@ -4,7 +4,16 @@ project(GraphicUI)
 
 find_package(Qt5Widgets)
 
-add_executable(GraphicUI main.cpp main-window.cpp main-window.h)
+SET(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+qt5_wrap_ui(UIC_WRAPPERS data_pane.ui)
+
+add_executable(
+	GraphicUI
+	main.cpp
+	main-window.cpp
+	main-window.h
+	${UIC_WRAPPERS})
 
 find_path(
 	BROWNIANTRAJECTORY_H_DIR BrownianTrajectoryLib.h

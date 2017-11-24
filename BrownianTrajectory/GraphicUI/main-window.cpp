@@ -23,8 +23,25 @@ MainWindow::MainWindow(QWidget *pParent)
 	path = generate_path(delta_time, step_count, v_max);
 	setAttribute(Qt::WA_NoSystemBackground, true);
 
+	uidp = new Ui_DataPane;
+	dataPane = new QDialog;
+	uidp->setupUi(dataPane);
+	connect(
+		dataPane, SIGNAL(accepted()),
+		this, SLOT(refreshParameters()));
+
 	createActions();
 	createMenus();
+}
+
+
+
+void MainWindow::refreshParameters()
+{
+	delta_time = uidp->doubleSpinBox_dtime->value();
+	step_count = uidp->spinBox_stepc->value();
+	v_max = uidp->doubleSpinBox_maxv->value();
+
 }
 
 
@@ -66,7 +83,10 @@ void MainWindow::appExit()
 
 void MainWindow::openDataPane()
 {
-
+	uidp->doubleSpinBox_dtime->setValue(delta_time);
+	uidp->spinBox_stepc->setValue(step_count);
+	uidp->doubleSpinBox_maxv->setValue(v_max);
+	dataPane->show();
 }
 
 
